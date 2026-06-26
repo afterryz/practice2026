@@ -2,13 +2,17 @@ name: .NET CI
 
 on:
   push:
-    branches: [ "main", "task01" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "**" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./practice2026
 
     steps:
     - uses: actions/checkout@v4
