@@ -24,6 +24,11 @@ namespace task01
             }
             string cleaned = builder.ToString();
 
+            if (cleaned.Length == 0)
+            {
+                return false;
+            }
+            
             char[] charArray = cleaned.ToCharArray();
             Array.Reverse(charArray);
             string reversed = new string(charArray);
