@@ -17,7 +17,7 @@ namespace task02
 
         public IEnumerable<Student> GetStudentsWithMinAverageGrade(double minAverageGrade)
         {
-            return _students.Where(s => s.Grades.Average() >= minAverageGrade);
+            return _students.Where(s => s.Grades != null && s.Grades.Any() && s.Grades.Average() >= minAverageGrade);
         }
 
         public IEnumerable<Student> GetStudentsOrderedByName()
@@ -34,9 +34,7 @@ namespace task02
         {
             return _students
                 .GroupBy(s => s.Faculty)
-                .OrderByDescending(group => group.SelectMany(s => s.Grades).Average())
-                .First()
-                .Key;
+                .MaxBy(group => group.SelectMany(s => s.Grades).Average())!.Key;
         }
     }
 }
