@@ -1,4 +1,4 @@
-using CommandRunner;
+п»їusing CommandRunner;
 using FileSystemCommands;
 using System;
 using System.IO;
@@ -98,9 +98,9 @@ public class FileSystemCommandsTests : IDisposable
 
         string result = consoleOutput.ToString();
 
-        Assert.Contains("Общий размер: 43 байт", result);
+        Assert.Contains("РћР±С‰РёР№ СЂР°Р·РјРµСЂ: 43 Р±Р°Р№С‚", result);
 
-        Assert.Contains("Найдено файлов: 2", result);
+        Assert.Contains("РќР°Р№РґРµРЅРѕ С„Р°Р№Р»РѕРІ: 2", result);
         Assert.Contains("data1.txt", result);
         Assert.Contains("data3.txt", result);
     }
