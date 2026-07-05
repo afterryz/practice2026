@@ -62,7 +62,7 @@ public class PluginSystemTests : IDisposable
         TestExecutionTracker.ExecutionOrder.Clear();
 
         var loader = new PluginLoader();
-        string testAssemblyPath = Path.GetDirectoryName(typeof(PluginSystemTests).Assembly.Location);
+        string testAssemblyPath = Path.GetDirectoryName(typeof(PluginSystemTests).Assembly.Location)!;
 
         loader.LoadPluginsFromDirectory(testAssemblyPath);
         loader.RunAll();

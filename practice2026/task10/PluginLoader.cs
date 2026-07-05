@@ -75,7 +75,7 @@ public class PluginLoader
 
             foreach (string depName in dependencies)
             {
-                Type dependentType = DiscoveredPlugins.FirstOrDefault(t => t.Name == depName);
+                Type? dependentType = DiscoveredPlugins.FirstOrDefault(t => t.Name == depName);
                 if (dependentType != null)
                 {
                     Dfs(dependentType);
