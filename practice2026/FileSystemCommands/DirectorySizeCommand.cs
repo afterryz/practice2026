@@ -1,9 +1,12 @@
 ﻿using CommandLib;
 using System.IO;
 using System.Linq;
+using task07;
 
 namespace FileSystemCommands;
 
+[DisplayName("Directory Size Command")]
+[Version(1, 0)]
 public class DirectorySizeCommand : CommandLib.ICommand
 {
     public string TargetDirectory { get; }

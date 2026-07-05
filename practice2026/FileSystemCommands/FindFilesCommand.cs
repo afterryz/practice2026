@@ -2,9 +2,12 @@
 using System.IO;
 using System.Linq;
 using CommandLib;
+using task07;
 
 namespace FileSystemCommands;
 
+[DisplayName("Find Files Command")]
+[Version(1, 1)]
 public class FindFilesCommand : CommandLib.ICommand
 {
     public string TargetDirectory { get; }
