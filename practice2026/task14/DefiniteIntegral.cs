@@ -7,73 +7,51 @@ public class DefiniteIntegral
 {
     public static double Solve(double a, double b, Func<double, double> function, double step, int threadsNumber)
     {
-        if (threadsNumber <= 0)
+        if (threadsNumber <= 0) throw new ArgumentException("Thread count must be > 0");
+
+        double resultSum = 0.0;
+        double fullLength = b - a;
+        double chunkWidth = fullLength / threadsNumber;
+
+        using (var syncBarrier = new Barrier(threadsNumber + 1))
         {
-            throw new ArgumentException("Thread count must be greater than zero.", nameof(threadsNumber));
-        }
+            Thread[] workers = new Thread[threadsNumber];
 
-        if (step <= 0)
-        {
-            throw new ArgumentException("Step size must be greater than zero.", nameof(step));
-        }
-
-        bool isReversed = false;
-        if (a > b)
-        {
-            (a, b) = (b, a);
-            isReversed = true;
-        }
-
-        double totalSum = 0.0;
-        double intervalLength = b - a;
-
-        if (intervalLength == 0)
-        {
-            return 0.0;
-        }
-
-        using var barrier = new Barrier(threadsNumber + 1);
-        double subIntervalLength = intervalLength / threadsNumber;
-        Thread[] threads = new Thread[threadsNumber];
-
-        for (int i = 0; i < threadsNumber; i++)
-        {
-            int index = i;
-            threads[i] = new Thread(() =>
+            for (int i = 0; i < threadsNumber; i++)
             {
-                double localA = a + index * subIntervalLength;
-                double localB = localA + subIntervalLength;
-
-                int stepsCount = (int)Math.Ceiling((localB - localA) / step);
-                double currentStep = (localB - localA) / stepsCount;
-
-                double localSum = 0.5 * (function(localA) + function(localB));
-
-                for (int j = 1; j < stepsCount; j++)
+                int id = i;
+                workers[i] = new Thread(() =>
                 {
-                    double x = localA + j * currentStep;
-                    localSum += function(x);
-                }
+                    double startX = a + id * chunkWidth;
+                    double endX = a + (id + 1) * chunkWidth;
 
-                localSum *= currentStep;
+                    int intervals = (int)Math.Round((endX - startX) / step);
+                    if (intervals < 1) intervals = 1;
 
-                double initialValue;
-                double computedValue;
-                do
-                {
-                    initialValue = totalSum;
-                    computedValue = initialValue + localSum;
-                }
-                while (Interlocked.CompareExchange(ref totalSum, computedValue, initialValue) != initialValue);
+                    double actualStep = (endX - startX) / intervals;
+                    double localAccumulator = 0.0;
 
-                barrier.SignalAndWait();
-            });
+                    for (int k = 0; k < intervals; k++)
+                    {
+                        double left = startX + k * actualStep;
+                        double right = startX + (k + 1) * actualStep;
+                        localAccumulator += (function(left) + function(right)) / 2.0 * actualStep;
+                    }
+                    
+                    double current, next;
+                    do
+                    {
+                        current = resultSum;
+                        next = current + localAccumulator;
+                    }
+                    while (Interlocked.CompareExchange(ref resultSum, next, current) != current);
 
-            threads[i].Start();
+                    syncBarrier.SignalAndWait();
+                });
+                workers[i].Start();
+            }
+            syncBarrier.SignalAndWait();
         }
-
-        barrier.SignalAndWait();
-
-        return isReversed ? -totalSum : totalSum;
+        return resultSum;
     }
 }
