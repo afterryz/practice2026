@@ -68,5 +68,11 @@ namespace task05tests
             Assert.Contains("text", paramsInfo);
             Assert.Contains("number", paramsInfo);
         }
+
+        [Fact]
+        public void Constructor_NullType_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ClassAnalyzer(null!));
+        }
     }
 }

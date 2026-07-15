@@ -11,6 +11,11 @@ namespace task05
 
         public ClassAnalyzer(Type type)
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type), "Тип для анализа не может быть null.");
+            }
+
             _type = type;
         }
 
