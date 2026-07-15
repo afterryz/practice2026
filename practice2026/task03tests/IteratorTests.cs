@@ -1,4 +1,7 @@
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using task03;
 using Xunit;
 
@@ -41,6 +44,12 @@ namespace task03tests
         }
 
         [Fact]
+        public void GenerateSequence_NegativeCount_ThrowsArgumentOutOfRangeException()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => CustomCollection<int>.GenerateSequence(5, -1).ToList());
+        }
+
+        [Fact]
         public void FilterAndSort_ReturnsFilteredAndSortedItems()
         {
             var collection = new CustomCollection<int>();
@@ -50,6 +59,22 @@ namespace task03tests
 
             var result = collection.FilterAndSort(x => x > 1, x => x).ToList();
             Assert.Equal(new[] { 2, 3 }, result);
+        }
+
+        [Fact]
+        public void FilterAndSort_NullPredicate_ThrowsArgumentNullException()
+        {
+            var collection = new CustomCollection<int>();
+
+            Assert.Throws<ArgumentNullException>(() => collection.FilterAndSort(null!, x => x));
+        }
+
+        [Fact]
+        public void FilterAndSort_NullKeySelector_ThrowsArgumentNullException()
+        {
+            var collection = new CustomCollection<int>();
+
+            Assert.Throws<ArgumentNullException>(() => collection.FilterAndSort(x => x > 0, null!));
         }
     }
 }
