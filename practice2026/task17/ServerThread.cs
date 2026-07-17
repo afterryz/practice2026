@@ -23,6 +23,8 @@ public class ServerThread
 
     public void EnqueueCommand(ICommand command)
     {
+        if (command == null) throw new ArgumentNullException(nameof(command));
+
         try
         {
             if (!_commandQueue.IsAddingCompleted)
