@@ -1,4 +1,6 @@
-﻿namespace task17;
+using System;
+
+namespace task17;
 
 public class HardStopCommand : ICommand
 {
@@ -6,7 +8,7 @@ public class HardStopCommand : ICommand
 
     public HardStopCommand(ServerThread targetThread)
     {
-        _targetThread = targetThread;
+        _targetThread = targetThread ?? throw new ArgumentNullException(nameof(targetThread));
     }
 
     public void Execute()
@@ -21,7 +23,7 @@ public class SoftStopCommand : ICommand
 
     public SoftStopCommand(ServerThread targetThread)
     {
-        _targetThread = targetThread;
+        _targetThread = targetThread ?? throw new ArgumentNullException(nameof(targetThread));
     }
 
     public void Execute()
