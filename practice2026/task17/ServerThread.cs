@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 
@@ -21,6 +21,8 @@ public class ServerThread
 
     public void EnqueueCommand(ICommand command)
     {
+        if (command == null) throw new ArgumentNullException(nameof(command));
+
         try
         {
             if (!_commandQueue.IsAddingCompleted)
